@@ -1,0 +1,9 @@
+Design patterns -> solution to some known problems.
+
+Creational DP -> How the objects are created.
+Types:
+Singleton
+Prototype
+Builder
+Factory
+Abstract Factory
