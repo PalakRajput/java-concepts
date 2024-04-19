@@ -11,11 +11,14 @@ package src.main.com.concept.designpatterns.creational.factory;
 public class ClientApp {
     public static void main(String[] args) {
         //Create factory object
-        ComputerFactory computerFactory = new ComputerFactory();
-        //Ask factory to return specific computer
-        Computer pc = computerFactory.getComputer("PC");
-        pc.print();
-        Computer server = computerFactory.getComputer("Server");
-        server.print();
+        String type = "PC";
+        ComputerFactory computerFactory = null;
+        if ("PC".equals(type)) {
+            computerFactory = new PCFactoryCreator();
+        } else if ("Server".equals(type)) {
+            computerFactory = new ServerFactoryCreator();
+        }
+        Computer computer = computerFactory.getComputer();
+        computer.print();
     }
 }
