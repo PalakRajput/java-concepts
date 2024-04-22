@@ -44,4 +44,7 @@ purpose and to get rid of telescoping constructors(constructor overloading).
 Lombok's @Builder annotation.
 StringBuffer and StringBuilder #append() method.
 
+# Prototype
 
+This pattern is required when object creation is costly, so the copy of existing object is returned(deep or shallow copy depends on the implementation of the clone method).
+All prototype class should provide a method to clone the object.
