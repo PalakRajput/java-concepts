@@ -1,4 +1,4 @@
-package src.main.com.concept.designpatterns.creational.factory;
+package src.main.com.concept.designpatterns.creational.factorymethod;
 
 public class PC implements Computer {
     private final int ram;

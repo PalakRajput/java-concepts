@@ -1,4 +1,4 @@
-package src.main.com.concept.designpatterns.creational.factory;
+package src.main.com.concept.designpatterns.creational.factorymethod;
 
 /**
  * In Factory design pattern, the creation logic of objects is not exposed to the client.
