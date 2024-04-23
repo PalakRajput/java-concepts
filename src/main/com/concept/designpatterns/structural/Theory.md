@@ -66,11 +66,26 @@ javax.servlet.http.HttpServletRequestWrapper and HttpServletResponseWrapper
 
 Let the object share memory.
 String pool implementation in java is an example of flyweight pattern.
-This pattern suggests to store the intrinsic state(constant) into a separate object and extrinsic state(changeable) into a separate object.
+This pattern suggests to store the intrinsic state(constant) into a separate object and extrinsic state(changeable) into
+a separate object.
 The intrinsic state should be initialized using constructor, and it should be immutable.
 Saves RAM by sharing state between multiple objects.
 JVM Usages:
 java.lang.Integer#valueOf(int) (also Boolean, Byte, Character, Short, Long and BigDecimal)
+
+# Proxy Design Pattern
+
+Lets us provide the substitute or placeholder for another object. It controls access to the original object.
+Proxy design pattern common uses are to control access or to provide a wrapper implementation for better performance.
+Usages:
+java.lang.reflect.Proxy
+java.rmi.*
+javax.ejb.EJB
+javax.inject.Inject
+javax.persistence.PersistenceContext
+A real-world example is: Internet access is guarded behind a network proxy. All network requests go through a proxy
+which first checks the requests for allowed websites and posted data to the network. If the request looks suspicious,
+the proxy blocks the request — otherwise request passes through. (consider it as protection proxy)
 
 
 
