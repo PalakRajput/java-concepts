@@ -46,3 +46,25 @@ the type process it.
 Instead of calling all the methods of the library in client code, create a facade class which calls all the required
 classes/methods of the library and return the desired output
 Now this facade can be used at all places where we want to convert the video file.
+
+# Decorator Design Pattern
+
+This pattern is used to add additional features/behaviors to an instance of a class without affecting other instances of
+the same class.
+
+Ex: We have a Notification system where we send notification either using WhatsApp, Facebook, Slack
+Now there can be a requirement to send two or three types of Notification, so we can't create classes for each
+combination.
+
+JVM Usages:
+All subclasses of java.io.InputStream, OutputStream, Reader and Writer have constructors that accept objects of their
+own type.
+java.util.Collections, methods checkedXXX(), synchronizedXXX() and unmodifiableXXX().
+javax.servlet.http.HttpServletRequestWrapper and HttpServletResponseWrapper
+
+# Flyweight Design Pattern
+
+Let the object share memory.
+String pool implementation in java is an example of flyweight pattern.
+This pattern suggests to store the intrinsic state(constant) into a separate object and extrinsic state(changeable) into a separate object
+
