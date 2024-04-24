@@ -73,9 +73,9 @@ class CompletableFutureDemo {
 |:----------------------------------------------------------------------------------------------------|:--------------------------------------------------------------------------------------------------------|
 | Blocking call to get() method to fetch result.                                                      | Results can be achieved using non-blocking methods such as <br/>`thenAccept()`, `thenApply()`, `join()` |
 | It is difficult to chain multiple asynchronous operations together                                  | Provides method such as `thenCompose()`, `allOf()`, `thenCombine()` to chain operations.                |
-| We can only check if the computation is successful or not and have to handle exceptions explicitly. | Better exception handling with methods such as `handle()`, `exceptionally()`.                           |
+| We can only check if the computation is successful or not and have to handle exceptions explicitly. | Better exception handling with methods such as `handle()`, `exceptionally()`.                           ||                                                                                                         |
 
-                                                                                                    |                                                                                                         |
+---
 
 ```java
 import java.util.concurrent.CompletableFuture;
