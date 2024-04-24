@@ -1,5 +1,6 @@
 package src.main.com.concept.multithreading;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -21,7 +22,6 @@ public class RunnableImpl implements Runnable {
     public void run() {
         for(int i=0; i< 10; i++){
             System.out.println(Thread.currentThread().getName() + " Run method called: " + i);
-//            System.out.println("Run method called: " + i);
         }
     }
 
@@ -40,12 +40,12 @@ public class RunnableImpl implements Runnable {
         service.shutdown();
 
         //Only a single thread is created
-        ExecutorService service1 = Executors.newSingleThreadExecutor();
+        Executor service1 = Executors.newSingleThreadExecutor();
         Runnable runnable = () -> System.out.println("Hey");
         service1.execute(runnable);
 
         //Returns list of waiting task and tries to shut down.
-        service1.shutdownNow();
+//        service1.shutdownNow();
 
 
     }

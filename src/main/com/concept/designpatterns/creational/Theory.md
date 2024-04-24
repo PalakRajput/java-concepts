@@ -23,6 +23,8 @@ java.lang.Runtime#getRuntime()
 java.awt.Desktop#getDesktop()
 java.lang.System#getSecurityManager()
 
+Real world example: Clipboard. Multiple apps might try to access it concurrently and if each application uses its own version there will be conflicting data.
+
 # Factory
 
 Instead of directly creating the object in client class. A factory class is created which returns the instance of the
