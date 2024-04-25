@@ -31,3 +31,16 @@ Usages:
 All non-abstract methods of java.io.InputStream, java.io.OutputStream, java.io.Reader and java.io.Writer.
 All non-abstract methods of java.util.AbstractList, java.util.AbstractSet and java.util.AbstractMap.
 
+# Mediator Design Pattern
+
+This pattern helps us reduce chaotic dependencies between objects.
+This pattern restricts direct communication between the objects and forces them to communicate via a mediator object.
+
+> The synonym for mediator is the controller part of MVC.
+
+Usages:
+java.util.Timer (all scheduleXXX() methods)
+java.util.concurrent.Executor#execute()
+java.util.concurrent.ExecutorService (invokeXXX() and submit() methods)
+java.util.concurrent.ScheduledExecutorService (all scheduleXXX() methods)
+java.lang.reflect.Method#invoke()
