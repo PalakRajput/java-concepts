@@ -1,6 +1,6 @@
 ## Behavioral Design Pattern
 
-These design patterns are concerned with algorithms and the assignment of responsibilities withing the objects.
+These design patterns are concerned with algorithms and the assignment of responsibilities within the objects.
 
 # Types:
 
@@ -23,4 +23,11 @@ javax.servlet.http.HttpServlet: service() method, plus all of the doXXX() method
 HttpServletResponse objects as arguments.
 javax.servlet.Filter#doFilter()
 
+# Template Design Pattern
+
+It defines the skeleton of the algorithm or may contain the default functionality of the algorithm in the superclass but
+lets the subclass overrides specific steps without changing its structure.
+Usages:
+All non-abstract methods of java.io.InputStream, java.io.OutputStream, java.io.Reader and java.io.Writer.
+All non-abstract methods of java.util.AbstractList, java.util.AbstractSet and java.util.AbstractMap.
 
