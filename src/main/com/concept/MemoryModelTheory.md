@@ -50,4 +50,4 @@ Local Variables and Objects<br/>
 - Each thread has its own copy of local variables when executing methods, even when working with the same code.
 
 
-
+![](../resources/JVMArchitecture.png)
