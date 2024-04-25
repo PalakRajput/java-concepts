@@ -50,4 +50,10 @@ Usages:<br/>
 
 Lets you define a subscription mechanism to notify multiple objects any event that happened to the event they are observing.
 
+# Chain of Responsibility
+
+Lets you pass request along a chain of handlers. Upon receiving the request each handler decides whether to pass the request to next handler or process it.
+
+Spring boot filter chain is example of this.
+In the project there was a Filter for authentication and one to save request in audit table.
 
