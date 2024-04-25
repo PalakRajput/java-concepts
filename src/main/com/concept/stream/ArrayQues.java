@@ -6,8 +6,9 @@ import java.util.List;
 
 public class ArrayQues {
     public static void main(String[] args) {
-        int[] arr = {4, 3, 2, 1};
-        System.out.println(addOneToArray(arr));
+//        int[] arr = {4, 3, 2, 1};
+//        System.out.println(addOneToArray(arr));
+        printLeaders(new int[]{16, 17, 4, 3, 5, 2});
     }
 
     private static List<Integer> addOneToArray(int[] arr) {
@@ -32,4 +33,26 @@ public class ArrayQues {
         return list;
     }
 
+    /**
+     * Write a program to print all the LEADERS in the array.
+     * An element is a leader if it is greater than all the elements to its right side.
+     * And the rightmost element is always a leader.
+     * For example:
+     * Input: arr[] = {16, 17, 4, 3, 5, 2},
+     * Output: 17, 5, 2
+     * Input: arr[] = {1, 2, 3, 4, 5, 2},
+     * Output: 5, 2
+     *
+     * @param arr input arr
+     */
+    private static void printLeaders(int[] arr) {
+        int length = arr.length;
+        int prev = Integer.MIN_VALUE;
+        for (int i = length - 1; i >= 0; i--) {
+            if (arr[i] > prev) {
+                prev = arr[i];
+                System.out.println(arr[i]);
+            }
+        }
+    }
 }
