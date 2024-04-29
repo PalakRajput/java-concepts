@@ -105,6 +105,7 @@ configured to support the type of Authentication that was passed into it.
 
 @Configuration
 @EanbleWebSecurity
+@EnableMethodSecurity
 class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -145,6 +146,126 @@ class SecurityConfig {
         UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
         configurationSource.registerCorsConfiguration("/**", corsConfiguration);
         return configurationSource;
+    }
+
+    /*@PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/api/admin")
+    public ResponseEntity<String> adminApi() {
+        return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body("Authenticated admin !");
+    }*/
+}
+```
+
+```java
+
+@Component
+public class CustomAuthProvider implements AuthenticationProvider {
+    private static final Logger logger = LoggerFactory.getLogger(CustomAuthProvider.class);
+    @Autowired
+    SigningKeyResolver signingKeyResolver;
+    @Value("${client-id}")
+    String appId;
+    @Value("${tenant-id}")
+    String tenantId;
+
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
+        try {
+            logger.info("Authenticate token");
+            retrieveClaimsAndValidateClaims(authentication);
+        } catch (ExpiredJwtException e) {
+            logger.info("Token is expired.");
+            throw new ApplicationException("401", e.getMessage());
+        } catch (MalformedJwtException | DecodingException e) {
+            logger.info("Token is malformed");
+            throw new ApplicationException("401", e.getMessage());
+        } catch (UnsupportedJwtException | SignatureException | IllegalArgumentException ex) {
+            logger.error("Exception occurred while validating token: {}", ex.getMessage(), ex);
+            return null;
+        }
+        return successfulAuthentication(authentication.getPrincipal().toString());
+
+    }
+
+    private void retrieveClaimsAndValidateClaims(Authentication authentication) {
+        String issuer = "IssuerURLInJWTToken";
+        //signingKeyResolver -> component responsible for calling jwks endpoint and constructing public key
+        Jws<Claims> claim = Jwts.parserBuilder().setSigningKeyResolver(signingKeyResolver).build()
+                .parseClaimsJws(authentication.getPrincipal().toString());
+        Claims claims = claim.getBody();
+        validateClaims(issuer, claims);
+    }
+
+    private void validateClaims(String issuer, Claims claims) {
+        if (!claims.getAudience().equals(appId) || !claims.getIssuedAt().before(new Date(System.currentTimeMillis()))
+                || !claims.getIssuer().equals(issuer) || claims.get("userId") == null || claims.get("email") == null) {
+            logger.error("All Claims are not matching: {}", claims.get("userId"));
+            throw new ApplicationException("401", "Invalid access token");
+        }
+    }
+    
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
+    }
+
+    private Authentication successfulAuthentication(String accessToken) {
+        return new UsernamePasswordAuthenticationToken(accessToken, accessToken, List.of(new SimpleGrantedAuthority("ROLE_ADMIN")));
+    }
+
+
+}
+```
+
+```java
+class CustomFilter extends GenericFilterBean {
+    private final AuthenticationManager authenticationManager;
+    private final SecurityContextRepository securityContextRepository;
+    private static final Logger log = LoggerFactory.getLogger(CustomFilter.class);
+
+
+    public AuthenticationFilter(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
+        this.securityContextRepository = new NullSecurityContextRepository();
+        this.tracer = tracer;
+    }
+
+
+    @Override
+    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain)
+            throws ServletException, IOException {
+        HttpServletRequest request = (HttpServletRequest) req;
+        HttpServletResponse response = (HttpServletResponse) resp;
+        try {
+            String headerValue = request.getHeader("Authorization");
+            if (headerValue == null || !headerValue.startsWith("Bearer")) {
+                //throw 401
+            }
+            String header = headerValue.substring(7);
+            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(header, header);
+            Authentication authenticationResult = authenticationManager.authenticate(token);
+            SecurityContext context = SecurityContextHolder.createEmptyContext();
+            context.setAuthentication(authenticationResult);
+            SecurityContextHolder.setContext(context);
+            this.securityContextRepository.saveContext(context, request, response);
+            filterChain.doFilter(request, response);
+        } catch (RuntimeException failed) {
+            SecurityContextHolder.clearContext();
+            log.error("Authentication failed for the request {}: {}", request.getServletPath(), failed.getMessage(), failed);
+            checkExceptionClassAndSetHeaderAndStatus(response, failed);
+        }
+    }
+
+
+    private void checkExceptionClassAndSetHeaderAndStatus(HttpServletResponse response, RuntimeException failed) {
+        if (failed.getClass().isAssignableFrom(ApplicationException.class) || (failed instanceof ProviderNotFoundException)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
+        if (failed.getClass().isAssignableFrom(ForbiddenException.class)) {
+            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        }
     }
 }
 ```
