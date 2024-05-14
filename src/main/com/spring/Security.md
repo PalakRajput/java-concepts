@@ -175,11 +175,8 @@ public class CustomAuthProvider implements AuthenticationProvider {
         try {
             logger.info("Authenticate token");
             retrieveClaimsAndValidateClaims(authentication);
-        } catch (ExpiredJwtException e) {
-            logger.info("Token is expired.");
-            throw new ApplicationException("401", e.getMessage());
-        } catch (MalformedJwtException | DecodingException e) {
-            logger.info("Token is malformed");
+        } catch (ExpiredJwtException | MalformedJwtException | DecodingException e) {
+            logger.info(e.getMessage());
             throw new ApplicationException("401", e.getMessage());
         } catch (UnsupportedJwtException | SignatureException | IllegalArgumentException ex) {
             logger.error("Exception occurred while validating token: {}", ex.getMessage(), ex);
@@ -195,15 +192,11 @@ public class CustomAuthProvider implements AuthenticationProvider {
         Jws<Claims> claim = Jwts.parserBuilder().setSigningKeyResolver(signingKeyResolver).build()
                 .parseClaimsJws(authentication.getPrincipal().toString());
         Claims claims = claim.getBody();
-        validateClaims(issuer, claims);
+        validateClaimsOfJWT(issuer, claims);
     }
 
-    private void validateClaims(String issuer, Claims claims) {
-        if (!claims.getAudience().equals(appId) || !claims.getIssuedAt().before(new Date(System.currentTimeMillis()))
-                || !claims.getIssuer().equals(issuer) || claims.get("userId") == null || claims.get("email") == null) {
-            logger.error("All Claims are not matching: {}", claims.get("userId"));
-            throw new ApplicationException("401", "Invalid access token");
-        }
+    private void validateClaimsOfJWT(String issuer, Claims claims) {
+        //Validate claims here like userId, nbf, issuer, audience and throw exception.
     }
     
     @Override
@@ -229,7 +222,6 @@ class CustomFilter extends GenericFilterBean {
     public AuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
         this.securityContextRepository = new NullSecurityContextRepository();
-        this.tracer = tracer;
     }
 
 
@@ -240,10 +232,7 @@ class CustomFilter extends GenericFilterBean {
         HttpServletResponse response = (HttpServletResponse) resp;
         try {
             String headerValue = request.getHeader("Authorization");
-            if (headerValue == null || !headerValue.startsWith("Bearer")) {
-                //throw 401
-            }
-            String header = headerValue.substring(7);
+            String header = headerValue.substring(7); //header starts with Bearer so remove 'Bearer ' from token
             UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(header, header);
             Authentication authenticationResult = authenticationManager.authenticate(token);
             SecurityContext context = SecurityContextHolder.createEmptyContext();
@@ -260,12 +249,7 @@ class CustomFilter extends GenericFilterBean {
 
 
     private void checkExceptionClassAndSetHeaderAndStatus(HttpServletResponse response, RuntimeException failed) {
-        if (failed.getClass().isAssignableFrom(ApplicationException.class) || (failed instanceof ProviderNotFoundException)) {
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        }
-        if (failed.getClass().isAssignableFrom(ForbiddenException.class)) {
-            response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-        }
+        //check specific exceptions and set response status code in `response` variable accordingly
     }
 }
 ```
