@@ -1,15 +1,14 @@
 package src.main.com.concept.stream;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class CodingQues {
     public static void main(String[] args) {
-        convertIntListToSting();
-        countOccurrence();
+        sortBySecondChar();
+//        convertIntListToSting();
+//        countOccurrence();
     }
 
     public static void convertIntListToSting() {
@@ -26,5 +25,17 @@ public class CodingQues {
         }
     }
 
+    public static void sortBySecondChar(){
+        List<String> list = new ArrayList<>();
+        list.add("John");
+        list.add("Jane");
+        list.add("Jessica");
+        list.add("Jeet");
+        list.add("Jacob");
+
+
+        list.stream().sorted(Comparator.comparing(n -> n.charAt(1))).forEach(System.out::println);
+
+    }
 
 }

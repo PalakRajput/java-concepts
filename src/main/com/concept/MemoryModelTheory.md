@@ -2,7 +2,7 @@
 
 1. When a thread is started, JRE creates a new thread stack for it.
 2. When the thread calls methodA(), the runtime environment pushes a new frame onto the thread stack. The frame contains
-   the call stack and local variables for methodA().
+   the call stack and local variables, object references for methodA().
 3. When methodB() is called from methodA(), again a new stack frame is pushed onto the thread stack. The frame contains
    the call stack and local variables for methodB().
 4. When methodB() returns, the runtime environment pops the frame for methodB() off the thread stack. When methodA()
@@ -28,6 +28,8 @@ size.<br/>
 Heap memory access is slower than stack memory because it involves dynamic memory allocation & deallocation managed by
 GC.<br/>
 Heap memory is not inherently thread safe as multiple threads can access or modify the same objects.
+
+> Primitive types for methods lives on stack memory and primitive types for objects live on heap memory.
 
 Local Variables and Objects<br/>
 ***Local Variables***
