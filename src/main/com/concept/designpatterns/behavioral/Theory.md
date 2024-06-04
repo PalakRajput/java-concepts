@@ -40,6 +40,11 @@ Usages:<br/>
 
 This pattern helps us reduce chaotic dependencies between objects.
 This pattern restricts direct communication between the objects and forces them to communicate via a mediator object.
+This is different from facade in the way that facade doesn't add any new functionality.
+Mediator centralizes communication between components of the system. The components only know about the mediator object
+and don’t communicate directly.
+
+Might be useful when we have circular dependency or tight coupling b/w objects.
 
 > The synonym for mediator is the controller part of MVC.
 
@@ -57,7 +62,6 @@ Lets you define a subscription mechanism to notify multiple objects any event th
 observing. Like a weather monitoring system where the weather locations act as subjects and weather viewing app act as
 observer and any change in weather in any location is notified to all observers and updated information is displayed.
 
-
 # Chain of Responsibility
 
 Lets you pass request along a chain of handlers. Upon receiving the request each handler decides whether to pass the
@@ -70,3 +74,18 @@ In the project there was a Filter for authentication and one to save request in 
 
 Encapsulates request as an object, thereby allowing parameterization of clients with queues, requests, and operations.
 This pattern decouples the sender of a request from its receiver
+
+# Memento
+
+Lets you save and restore the previous state of an object without revealing the details of its implementation.
+
+# Iterator
+
+Iterator is a behavioral design pattern that lets you traverse elements of a collection without exposing its underlying
+representation.
+Iterator is the example of this type of pattern.
+
+# State
+
+This pattern allows an object to change its behaviour when it's internal state changes. The states are represented by
+separate objects.
