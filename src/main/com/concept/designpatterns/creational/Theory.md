@@ -23,7 +23,8 @@ java.lang.Runtime#getRuntime()
 java.awt.Desktop#getDesktop()
 java.lang.System#getSecurityManager()
 
-Real world example: Clipboard. Multiple apps might try to access it concurrently and if each application uses its own version there will be conflicting data.
+Real world example: Clipboard. Multiple apps might try to access it concurrently and if each application uses its own
+version there will be conflicting data.
 
 # Factory
 
@@ -33,6 +34,9 @@ Have switch statement to determine which factory should be called to create obje
 ```The Factory Method pattern suggests that you replace direct object construction calls (using the new operator) with calls to a special factory method. Don’t worry: the objects are still created via the new operator, but it’s being called from within the factory method. Objects returned by a factory method are often referred to as products.```
 JVM usages:
 java.util.Calendar#getInstance()
+
+> In Spring, the Factory Pattern is used to create instances of beans dynamically, based on the current state of the
+> application. Spring provides two main implementations of the Factory pattern: BeanFactory and ApplicationContext.
 
 # Abstract Factory
 
@@ -48,5 +52,6 @@ StringBuffer and StringBuilder #append() method.
 
 # Prototype
 
-This pattern is required when object creation is costly, so the copy of existing object is returned(deep or shallow copy depends on the implementation of the clone method).
+This pattern is required when object creation is costly, so the copy of existing object is returned(deep or shallow copy
+depends on the implementation of the clone method).
 All prototype class should provide a method to clone the object.

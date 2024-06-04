@@ -101,10 +101,13 @@ the Metaspace reaches its maximum size.
    for major garbage collection in the Old Generation. Default implementation of GC in JVM for Java8. It also stops the
    world.
 
-3. Parallel Old GC: Same as parallel GC just that the multiple threads are used for old generation also. 
+3. Parallel Old GC: Same as parallel GC just that the multiple threads are used for old generation also.
 
 4. CMS (Concurrent Mark and Sweep) GC: Multiple threads are used for minor garbage collection using the same algorithm
    as Parallel. Major garbage collection is multi-threaded, like Parallel Old GC, but CMS runs concurrently alongside
    application processes to minimize “stop the world” events.
 
-5. G1 (Garbage First) GC (Default in Java17): 
+5. G1 (Garbage First) GC (Default in Java17): It divides the heap into further parts and concurrently collects the
+   garbage objects. Marking of free objects is done concurrently for old generation but for young generations' marking
+   and compacting is done by stopping all other threads and compacting of old generation is also done by stopping all
+   the threads.

@@ -25,7 +25,15 @@ public class StreamQues {
         map.put(6, new Employee("Jones", "Doe", 53, 100));
         map.put(7, new Employee("Jenn", "Doe", 50, 100));
 
-        map.entrySet().stream().filter(entry -> entry.getValue().getAge() > 50).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).forEach((k, v) -> System.out.println(k + " - " + v));
+//        map.entrySet().stream().filter(entry -> entry.getValue().getAge() > 50).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)).forEach((k, v) -> System.out.println(k + " - " + v));
+        Map<Employee, String> treeMap = new TreeMap<>();
+        treeMap.put(new Employee("Jane", "Doe", 21, 100), "Jane");
+        treeMap.put(new Employee("James", "Doe", 23, 1000), "James");
+        treeMap.put(new Employee("Jenna", "Doe", 22, 10000), "Jenna");
+        for (Map.Entry<Employee, String> entry : treeMap.entrySet()) { //ClassCastException because Employee is not Comparable
+            System.out.println(entry.getKey());
+            System.out.println(entry.getValue());
+        }
     }
 
     private static void rotateArray() {

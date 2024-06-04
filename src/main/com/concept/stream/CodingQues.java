@@ -6,9 +6,22 @@ import java.util.stream.Collectors;
 
 public class CodingQues {
     public static void main(String[] args) {
-        sortBySecondChar();
+//        sortBySecondChar();
 //        convertIntListToSting();
 //        countOccurrence();
+        Person person = new Person("Peter");
+        person.setName("Peter1");
+        updatePerson(person);
+        System.out.println(person.getName());
+        Person p = new PersonA("Java", 12);
+        p.printName();
+        //p.printAge(); -> Compile time error
+    }
+
+    private static void updatePerson(Person p) {
+        p.setName("Peter2");
+        p = null;
+
     }
 
     public static void convertIntListToSting() {
@@ -25,7 +38,7 @@ public class CodingQues {
         }
     }
 
-    public static void sortBySecondChar(){
+    public static void sortBySecondChar() {
         List<String> list = new ArrayList<>();
         list.add("John");
         list.add("Jane");
@@ -37,5 +50,42 @@ public class CodingQues {
         list.stream().sorted(Comparator.comparing(n -> n.charAt(1))).forEach(System.out::println);
 
     }
+}
 
+class Person {
+    public String name;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Person(String name) {
+        this.name = name;
+    }
+
+    public void printName() {
+        System.out.println("Parent");
+    }
+}
+
+class PersonA extends Person {
+    private int age;
+
+    public PersonA(String name, int age) {
+        super(name);
+        this.age = age;
+    }
+
+    @Override
+    public void printName() {
+        System.out.println("Child");
+    }
+
+    public void printAge() {
+        System.out.println(age);
+    }
 }

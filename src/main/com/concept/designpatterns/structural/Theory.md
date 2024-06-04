@@ -33,13 +33,21 @@ Adding new shapes or colors to this hierarchy will grow the classes exponentiall
 
 Bridge pattern allows to choose composition over inheritance.
 
+# Composite Design Pattern
+
+It can be used when we want to treat group of objects and single object as same.
+Like a file system where a directory can have files(leaf node) and/or subdirectories and those should be treated in same
+manner. 
+Used in case of recursive data structures(menu and menu items, file system, graphics editor)
+
+
 # Facade Design Pattern
 
 Provides a simpler interface to a complex library, framework or classes.
 The subsystem(complex library, framework) is not aware of facade object.
 The facade doesn't change the functionality of the subsystem.
 
-Use case -> JDBC
+Use case -> JDBC, JPA
 
 Ex: We have video conversion library which provides classes/methods to determine video type, read it and then based on
 the type process it.

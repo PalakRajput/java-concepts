@@ -1,3 +1,115 @@
+### wait(), notify() and notifyAll()
+
+These methods are used to enable intercommunication of threads. These methods can only be called from synchronized area
+otherwise we will get IllegalMonitorStateException.
+
+The Thread which is excepting updation it has to call wait() method and the Thread
+which is performing updation it has to call notify() method. After getting notification the
+waiting Thread will get those updations.
+
+```java
+class ThreadA {
+    public static void main(String[] args) throws InterruptedException {
+        ThreadB b = new ThreadB();
+        b.start();
+        synchronized (b) {
+            System.out.println("main Thread calling wait() method");//step-1
+            b.wait();
+            System.out.println("main Thread got notification call");//step-4
+            System.out.println(b.total);
+        }
+    }
+}
+
+class ThreadB extends Thread {
+    int total = 0;
+
+    public void run() {
+        synchronized (this) {
+            System.out.println("child thread starts calcuation");//step-2
+            for (int i = 0; i <= 100; i++) {
+                total = total + i;
+            }
+            System.out.println("child thread giving notification call");//step-3
+            this.notify();
+        }
+    }
+}
+```
+
+### yield(), join(), sleep()
+
+yield() is used when we want another thread of same priority to be executed instead of current running thread. If there
+are no threads of same priority then the current thread will continue executing.
+
+join() is used when a thread wants to wait for complete execution of another thread. If a Thread t1 executes t2.join()
+then t1 should go for waiting state until t2 completes.
+
+sleep() if a Thread don’t want to perform any operation for a particular amount of time then we
+should go for sleep() method.
+
+### Synchronized
+
+Synchronized keyword is only applicable for method or code blocks. Only one thread can access the synchronized method or
+block at once but other threads can execute the non synchronized methods.
+
+If thread wants to execute the instance synchronized method, then object level lock will be acquired and different
+threads with different objects can execute the same method.
+
+If thread wants to execute the static synchronized method, then class level lock will be acquired. At this time no other
+threads can execute any other static synchronized methods, but they can access normal static methods, instance methods
+or
+synchronized instance methods.
+
+```java
+class Display {
+    public synchronized void wish(String name) {
+        for (int i = 0; i < 5; i++) {
+            System.out.print("good morning:");
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                log.error("Exception occurred: {}", e, getMessage(), e);
+            }
+            System.out.println(name);
+        }
+    }
+}
+
+class MyThread extends Thread {
+    Display d;
+    String name;
+
+    MyThread(Display d, String name) {
+        this.d = d;
+        this.name = name;
+    }
+
+    public void run() {
+        d.wish(name);
+    }
+}
+
+class SynchronizedDemo {
+    public static void main(String[] args) {
+        Display d1 = new Display();
+        //Since we only have 1 object d1, first t1 will execute and then t2 will execute.
+        MyThread t1 = new MyThread(d1, "dhoni");
+        MyThread t2 = new MyThread(d1, "yuvaraj");
+        t1.start();
+        t2.start();
+
+        Display d2 = new Display();
+        Display d3 = new Display();
+        //Since we have 2 objects d2 and d3, and both threads t3 & t4 are using different objects the output will be irregular.
+        MyThread t3 = new MyThread(d2, "dhoni");
+        MyThread t4 = new MyThread(d3, "yuvaraj");
+        t3.start();
+        t4.start();
+    }
+}
+```
+
 # Executor
 
 The Executor interface has a single execute method to submit Runnable instances for execution.
@@ -17,8 +129,21 @@ class ExecutorDemo {
 
 # Executor Service
 
-Contains various methods to manage lifecycle of individual tasks or executor.
-Provides method to shut down executor service.
+* Contains various methods to manage lifecycle of individual tasks or executor.
+* Provides method to shut down executor service.
+* A task can be submitted using execute(), submit(), invokeAny(), invokeAll() methods.
+* execute(): es.execute(() -> System.out.println("Hello world")) method is a void method so it doesn't return anything.
+* submit() -> ```
+  Future<String> future = es.submit(() -> {
+  System.out.println("Hello world");
+  return "Executed";
+  })``` returns a Future object.
+* String result = es.invokeAny(listOfCallableTasks) returns the result of any task completed successfully.
+* List<Future<String>> results = es.invokeAll(callableTasks) returns the list of
+* The executor service won't shutdown automatically. To shutdown the executor service we can use shutdown() or
+  shutdownNow().
+* shutdown() -> will stop accepting new tasks and shutdown es once the accepted tasks are completed.
+* shutdownNow() -> will return the lists of tasks waiting to be processed and tries to shutdown the es.
 
 ```java
 import java.util.concurrent.Callable;
@@ -77,7 +202,6 @@ class FixedThreadDemo {
             Thread.sleep(1000);
             return null;
         });
-
         assertEquals(2, executor.getPoolSize());
         //Because the thread pool was created with only 2 threads and we submitted 3 tasks so 1 task will be added to queue.
         assertEquals(1, executor.getQueue().size());

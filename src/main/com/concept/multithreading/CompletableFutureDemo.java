@@ -3,6 +3,7 @@ package src.main.com.concept.multithreading;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -61,5 +62,6 @@ public class CompletableFutureDemo {
         System.out.println(future.join());
         long endTime = System.currentTimeMillis();
         System.out.println("Time taken::" + (endTime - startTime) / 1000);
+
     }
 }
