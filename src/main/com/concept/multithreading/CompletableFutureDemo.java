@@ -110,6 +110,7 @@ public class CompletableFutureDemo {
         CompletableFuture<List<String>> allFutureResults = allFuture
                 .thenApply(t -> completableFutures.stream().map(CompletableFuture::join)
                         .collect(Collectors.toList()));
+        List<String> result = allFutureResults.join();
         System.out.println("Result from allOf allFutureResult.join: " + allFutureResults.join());
         long endTime = System.currentTimeMillis();
         System.out.println("Time taken by allOf::" + (endTime - startTime) / 1000);

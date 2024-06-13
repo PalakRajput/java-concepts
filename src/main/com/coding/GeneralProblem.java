@@ -2,7 +2,8 @@ package src.main.com.coding;
 
 public class GeneralProblem {
     public static void main(String[] args) {
-        appendZeroesToEnd(new int[]{0, 1, 0, 3, 12, 0});
+        //This approach has an issue because if first element is non zero then it will append all zeroes to start instead of end
+        appendZeroesToEnd(new int[]{4, 0, 1, 0, 3, 12, 0});
     }
 
     private static void appendZeroesToEnd(int[] ints) {

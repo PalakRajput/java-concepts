@@ -253,3 +253,8 @@ class CustomFilter extends GenericFilterBean {
     }
 }
 ```
+
+### OAuth 
+For authorization using access token.
+### Open-ID connect
+Sits on top of OAuth 2.0 and provides authentication with identity token.

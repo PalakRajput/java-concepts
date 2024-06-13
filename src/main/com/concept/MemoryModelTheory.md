@@ -1,3 +1,5 @@
+https://medium.com/java-vault/java-memory-allocation-stack-and-heap-3e25867baa7e
+
 # Thread Stack
 
 1. When a thread is started, JRE creates a new thread stack for it.
