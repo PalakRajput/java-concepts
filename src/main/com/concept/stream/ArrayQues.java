@@ -1,6 +1,7 @@
 package src.main.com.concept.stream;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -9,6 +10,21 @@ public class ArrayQues {
 //        int[] arr = {4, 3, 2, 1};
 //        System.out.println(addOneToArray(arr));
         printLeaders(new int[]{16, 17, 4, 3, 5, 2});
+        System.out.println(Arrays.toString(moveZeroToLeft(new int[]{1, 0, 1, 0, 1, 1, 0, 0})));
+    }
+
+    private static int[] moveZeroToLeft(int[] arr) {
+        int j = 0;
+        for (int i = 0; i < arr.length; i++) {
+            //for one to left just change the condition to arr[i] != 0
+            if(arr[i] == 0){
+                int temp = arr[j];
+                arr[j] = arr[i];
+                arr[i] = temp;
+                j++;
+            }
+        }
+        return arr;
     }
 
     private static List<Integer> addOneToArray(int[] arr) {

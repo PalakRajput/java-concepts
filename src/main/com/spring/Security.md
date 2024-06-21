@@ -198,7 +198,7 @@ public class CustomAuthProvider implements AuthenticationProvider {
     private void validateClaimsOfJWT(String issuer, Claims claims) {
         //Validate claims here like userId, nbf, issuer, audience and throw exception.
     }
-    
+
     @Override
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
@@ -254,7 +254,59 @@ class CustomFilter extends GenericFilterBean {
 }
 ```
 
-### OAuth 
+### OAuth
+
 For authorization using access token.
+
 ### Open-ID connect
+
 Sits on top of OAuth 2.0 and provides authentication with identity token.
+
+#### RSA
+
+Asymmetric encryption algorithm where a private key is used to encrypt the data and public key is used to decrypt it.
+
+> Generate 2048 bit private key:
+> openssl genrsa -out test_key.pem 2048
+> Generate it's corresponding public key:
+> openssl rsa -in test_key.pem -outform PEM -pubout -out test_key.pem.pub
+
+```java
+class GenerateJWT {
+    public String generateJWT() {
+        String jwt = Jwts.builder()                     // (1)
+
+                .header()                                   // (2) optional
+                .keyId("aKeyId")
+                .and()
+
+                .subject("Bob")                             // (3) JSON Claims, or
+                //.content(aByteArray, "text/plain")        //     any byte[] content, with media type
+
+                .signWith(signingKey)                       // (4) if signing, or
+                //.encryptWith(key, keyAlg, encryptionAlg)  //     if encrypting
+
+                .compact();
+
+        //jws = short for signed jwt
+        String jws = Jwts.builder()
+
+                .issuer("me")
+                .subject("Bob")
+                .audience().add("you").and()
+                .expiration(expiration) //a java.util.Date
+                .notBefore(notBefore) //a java.util.Date
+                .issuedAt(new Date()) // for example, now
+                .id(UUID.randomUUID().toString()); //just an example id
+    }
+}
+```
+
+#### Reading a JWT
+You read (parse) a JWT as follows:
+
+1. Use the Jwts.parser() method to create a JwtParserBuilder instance.
+2. Optionally call keyLocator, verifyWith or decryptWith methods if you expect to parse signed or encrypted JWTs.
+3. Call the build() method on the JwtParserBuilder to create and return a thread-safe JwtParser.
+4. Call one of the various parse* methods with your compact JWT string, depending on the type of JWT you expect.
+5. Wrap the parse* call in a try/catch block in case parsing, signature verification, or decryption fails.

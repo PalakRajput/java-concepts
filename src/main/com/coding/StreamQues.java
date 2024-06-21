@@ -6,13 +6,13 @@ import java.util.stream.Stream;
 
 public class StreamQues {
     public static void main(String[] args) {
-//        get15AuthorsByUniqueUppercaseSurname();
-//        getFirstNonRepeatingChar();
-//        sumOfSquareOfEvenNumbers();
-//        reverseAStringWithSpecialChars();
-//        sortEmployeesByNameAgeSal();
-//        mapEmployeeBySal();
-//        rotateArray();
+        get15AuthorsByUniqueUppercaseSurname();
+        getFirstNonRepeatingChar();
+        sumOfSquareOfEvenNumbers();
+        reverseAStringWithSpecialChars();
+        sortEmployeesByNameAgeSal();
+        mapEmployeeBySal();
+        rotateArray();
 //        Map<String, Integer> result = Stream.of("a:332", "b:42", "c:", "d", "f:2345", "i:-34")
 //                .collect(Collectors.toMap());
 
@@ -61,7 +61,7 @@ public class StreamQues {
                 new Employee("Rina", "Joe", 19, 2823.23),
                 new Employee("Amit", "Patel", 45, 7783.23));
 
-        employees.stream().filter(e -> e.getSal() > 2000).collect(Collectors.groupingBy(e -> e.getSal(), Collectors.toList())).forEach((k, v) -> System.out.println(k + " " + v));
+        employees.stream().filter(e -> e.getSal() > 2000).collect(Collectors.groupingBy(e -> e.getSal())).forEach((k, v) -> System.out.println(k + " " + v));
     }
 
 

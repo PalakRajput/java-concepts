@@ -285,3 +285,74 @@ class ScheduledThreadPoolDemo {
     }
 }
 ```
+
+### CountDownLatch
+
+**CountDownLatch:** CountDownLatch is a synchronization aid in Java that allows one or more threads to wait until a set
+of
+operations, performed by other threads, completes.
+**Initialization: new CountDownLatch(5):** This creates a new CountDownLatch with an initial count of 5. The initial
+count
+represents the number of times the countDown method must be invoked on the latch before it releases awaiting threads.
+**Usage:** The coursesReady object is shared among different threads. Each thread, before completing its operation,
+calls
+countDown on the latch, decrementing the count. Threads waiting for the operations to complete call await, blocking
+until the count reaches zero.
+Here’s a more detailed explanation of how a CountDownLatch works:
+
+The count is initialized during instantiation, representing the number of times countDown must be called before the
+waiting threads are released.
+Threads call the countDown method when they complete their tasks, decrementing the count.
+Threads waiting for the tasks to complete call the await method. They will be blocked until the count reaches zero.
+When the count reaches zero, the waiting threads are released, and the await method returns.
+
+```java
+import java.util.concurrent.CountDownLatch;
+
+public class Chef {
+    public static void main(String[] args) throws InterruptedException {
+        CountDownLatch coursesReady = new CountDownLatch(5);
+
+        // Kitchen tasks for each course
+        new Thread(new CookingTask("Appetizer", coursesReady)).start();
+        new Thread(new CookingTask("Soup", coursesReady)).start();
+        new Thread(new CookingTask("Main Course", coursesReady)).start();
+        new Thread(new CookingTask("Dessert", coursesReady)).start();
+        new Thread(new CookingTask("Coffee", coursesReady)).start();
+
+        // Wait for all courses to be ready
+        coursesReady.await();
+
+        System.out.println("All courses are ready! Let's serve the meal.");
+    }
+}
+
+class CookingTask implements Runnable {
+    private final String course;
+    private final CountDownLatch latch;
+
+    public CookingTask(String course, CountDownLatch latch) {
+        this.course = course;
+        this.latch = latch;
+    }
+
+    @Override
+    public void run() {
+        // Simulate cooking time
+        try {
+            Thread.sleep((long) (Math.random() * 1000));
+            System.out.println(course + " is ready!");
+            latch.countDown(); // Signal that this course is ready
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
+```
+
+CountDownLatch is suitable when one or more threads need to wait for a fixed number of threads to complete their tasks
+before proceeding.
+CyclicBarrier is ideal when multiple threads need to synchronize at a predefined point in their execution and then
+continue with their tasks.
+Semaphore is handy when controlling access to a shared resource with a limited capacity, allowing a specified number of
+threads to access the resource simultaneously.

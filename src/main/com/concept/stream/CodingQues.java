@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 public class CodingQues {
     public static void main(String[] args) {
-//        sortBySecondChar();
-//        convertIntListToSting();
-//        countOccurrence();
+        sortBySecondChar();
+        convertIntListToSting();
+        countOccurrence();
         Person person = new Person("Peter");
         person.setName("Peter1");
         updatePerson(person);
