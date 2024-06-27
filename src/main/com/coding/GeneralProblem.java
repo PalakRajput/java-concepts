@@ -2,6 +2,7 @@ package src.main.com.coding;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 
 class User {
@@ -61,13 +62,59 @@ class Solution {
     }
 }
 
+class MinStack {
+
+    int[] arr;
+    int currentIndex;
+    int[] min;
+
+    public MinStack() {
+        arr = new int[30000];
+        currentIndex = -1;
+        min = new int[30000];
+    }
+
+    public void push(int val) {
+        currentIndex = currentIndex + 1;
+        arr[currentIndex] = val;
+        if (currentIndex == 0) {
+            min[currentIndex] = val;
+        } else {
+            min[currentIndex] = Math.min(val, min[currentIndex - 1]);
+        }
+    }
+
+    public void pop() {
+        //set item at current index to 0(default value) and decrement current index;
+        arr[currentIndex] = 0;
+        min[currentIndex] = 0;
+        currentIndex = currentIndex - 1;
+    }
+
+    public int top() {
+        return arr[currentIndex];
+    }
+
+    public int getMin() {
+        return min[currentIndex];
+    }
+}
+
 public class GeneralProblem {
     public static void main(String[] args) {
-        User u1 = new User("abc", 1);
+        /*User u1 = new User("abc", 1);
         User u2 = new User("abc", 1);
         System.out.println(u1 == u2);
         System.out.println(u1.hashCode());
-        System.out.println(u2.hashCode());
+        System.out.println(u2.hashCode());*/
+
+//        MinStack obj = new MinStack();
+//        obj.push(-2);
+//        obj.push(0);
+//        obj.push(-3);
+//        System.out.println("Minimum val: " + obj.getMin());
+//        obj.pop();
+//        System.out.println("Top of stack: " + obj.top());
 
 //        appendZeroesToEnd(new int[]{4, 0, 1, 0, 3, 12, 0});
 //        mapDemo();
@@ -84,7 +131,190 @@ public class GeneralProblem {
 //        System.out.println(countCollisions("LLRLRLLSLRLLSLSSSS"));
 //        System.out.println(timeRequiredToBuy(new int[]{84,49,5,24,70,77,87,8}, 3));
 //        System.out.println(Arrays.toString(sortStrings(new String[]{"New York", "New Jersey", "New Town"})));
-        System.out.println(getGroupedStringsCount("aaabbaanjkkllaaabbnjbb"));
+//        System.out.println(getGroupedStringsCount("aaabbaanjkkllaaabbnjbb"));
+//        System.out.println(findSmallestMissingNumber(new int[] {1, 2, 3, 4, 6, 7, 8, 9}));
+//        System.out.println(maxProduct(new int[]{0,10,10,10,10,10,10,10,10,10,-10,10,10,10,10,10,10,10,10,10,0}));
+        Node headA = new Node(1, null);
+        headA.next = new Node(9, null);
+        headA.next.next = new Node(1, null);
+        headA.next.next.next = new Node(2, null);
+        headA.next.next.next.next = new Node(4, null);
+        Node headB = new Node(3, null);
+        headB.next = new Node(2, null);
+        headB.next.next = new Node(4, null);
+//        System.out.println(getIntersectionNode(headA, headB).data);
+
+//        Queue<Integer> queue = new ArrayDeque<>();
+//        queue.add(1);
+//        System.out.println("Head of queue: " + queue.peek());
+//        System.out.println("Delete head" + queue.poll());
+
+//        System.out.println(longestPalindrome("babad"));
+
+//        System.out.println(topKFrequent(new int[]{1,1,1,2,2,3}, 2));
+
+//        System.out.println(maximumGain("aabbaaxybbaabb", 5, 4));
+        System.out.println(findMinimumMissingElement(new int[]{1, 2, 3, 5, 6, 7, 8, 9}));
+
+    }
+
+    public static int findMinimumMissingElement(int[] arr){
+
+        int element = -1;
+
+        int low = 0;
+        int high = arr.length - 1;
+        // [1, 2, 3, 5, 6, 7, 8, 9]
+        // [0, 1, 2, 3, 4, 5, 6, 7]
+        while(low <= high){
+            int mid = (high + low )/2;
+            if(arr[mid] == mid + 1){
+                //search in right side
+                high = mid + 1;
+            } else {
+                low = mid;
+            }
+        }
+
+
+        return low;
+    }
+
+//    public static int maximumGain(String s, int x, int y) {
+//        Stack<String> stack = new Stack<>();
+//        int result = 0;
+//        for(String s1 : s.split("")){
+//            if(stack.isEmpty()){
+//                stack.push(s1);
+//            } else if(stack.peek().equals("b") && s1.equals("a") && y > x){
+//                stack.pop();
+//                result += y;
+//            } else if(stack.peek().equals("a") && s1.equals("b") && x > y){
+//                stack.pop();
+//                result += x;
+//            }
+//        }
+//
+//        return result;
+//    }
+
+    public static int[] topKFrequent(int[] nums, int k) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for (int num : nums) {
+            if (map.containsKey(num)) {
+                map.put(num, map.get(num) + 1);
+            } else {
+                map.put(num, 1);
+            }
+        }
+        int[] result = new int[k];
+        int j = 0;
+        LinkedHashMap<Integer, Integer> res = map.entrySet().stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (oldValue, newVal) -> oldValue, LinkedHashMap::new));
+
+        for(Map.Entry<Integer, Integer> e : res.entrySet()){
+            result[j++] = e.getKey();
+            if(j == k){
+                break;
+            }
+        }
+        return result;
+    }
+
+
+    public static String longestPalindrome(String s) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(s.charAt(0));
+        String max = sb.toString();
+        for (int j = 1; j < s.length(); j++) {
+            sb.append(s.charAt(j));
+            if (!isPalindrome(sb.toString())) {
+                while (!isPalindrome(sb.toString())) {
+                    sb.deleteCharAt(0);
+                }
+            }
+            max = max.length() > sb.length() ? max : sb.toString();
+        }
+        return max;
+
+    }
+
+    private static boolean isPalindrome(String s) {
+        if (s.isEmpty() || s.length() == 1) {
+            return true;
+        }
+        for (int i = 0; i <= s.length() / 2; i++) {
+            if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    public static Node getIntersectionNode(Node headA, Node headB) {
+        Node temp1 = headA;
+        Node temp2 = headB;
+        while (temp1 != null) {
+            while (temp2 != null){
+                if(temp1 == temp2){
+                    return temp1;
+                }
+                temp2 = temp2.next;
+            }
+            temp2 = headB;
+            temp1 = temp1.next;
+        }
+
+        //return a node with val = 0 if one of the list is fully traversed but the intersection was not found
+        return new Node(0, null);
+    }
+
+    public static int maxProduct(int[] nums) {
+        long max = Long.MIN_VALUE;
+
+        for (int i = 0; i < nums.length; i++) {
+            long curr = nums[i];
+            for (int j = i + 1; j < nums.length; j++) {
+                if (curr > max) {
+                    max = curr;
+                }
+                curr *= nums[j];
+
+            }
+            if (curr > max) {
+                max = curr;
+            }
+        }
+        return (int) max;
+    }
+
+    private static int findSmallestMissingNumber(int[] arr) {
+        int result = -1;
+
+        int i = 0;
+        int j = arr.length - 1;
+        while (i <= j) {
+
+            int mid = (i + j) / 2;
+            if (i == j) {
+                if (arr[i] > mid + 1) {
+                    return mid - 1;
+                } else {
+                    return mid + 1;
+                }
+            }
+            //the sequence is correct up until mid
+            if (arr[mid] == mid + 1) {
+                i = mid + 1;
+            } else {
+                j = mid - 1;
+            }
+        }
+
+        return -1;
     }
 
     private static Map<String, Integer> getGroupedStringsCount(String s) {

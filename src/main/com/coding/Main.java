@@ -58,8 +58,8 @@ public class Main {
 }
 
 class Node {
-    private int data;
-    private Node next;
+     int data;
+     Node next;
 
     Node(int data, Node next) {
         this.data = data;

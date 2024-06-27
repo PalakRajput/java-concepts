@@ -1,10 +1,37 @@
 package src.main.com.concept.stream;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.Reader;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+
+class Base {
+    public void m1(int a, int b) throws Exception {
+        if(a < 0 && b < 0){
+            throw new Exception("Arguments cannot be negative");
+        }
+        System.out.println(a + b);
+
+    }
+}
+
+class Derived extends Base {
+    @Override
+    public void m1(int a, int b) {
+        System.out.println(a - b);
+    }
+
+    public Derived() throws Exception{
+        System.out.println("Derived class constructor");
+        throw new Exception("weqwe");
+    }
+
+    public static void main(String[] args) throws Exception {
+        Derived b = new Derived();
+        b.m1(1, 2);
+    }
+}
 
 public class CustomKey {
     public static void main(String[] args) {
@@ -40,6 +67,33 @@ public class CustomKey {
         //Since we changed the name
         System.out.println("Is employee1 and employee2 equal: " + (employee1.equals(employee2)));
         System.out.println(employeeMap.get(employee2));
+
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+        list.add(4);
+
+
+
+
+        try(BufferedReader br = new BufferedReader(Reader.nullReader())){
+            br.readLine();
+        } catch (IOException io){
+            io.printStackTrace();
+            System.out.println("Exception");
+        }
+
+        System.out.println("\nSplitIterator: ");
+        Spliterator<Integer> spliterator = list.spliterator();
+        Spliterator<Integer> spliterator1 = spliterator.trySplit();
+        spliterator.forEachRemaining(System.out::println);
+        System.out.println("\nSplitIterator1: ");
+//        spliterator1.forEachRemaining(System.out::println);
+        System.out.println("TryAdvance");
+        spliterator1.tryAdvance(System.out::println);
     }
 }
 
@@ -89,7 +143,7 @@ class Employee {
         if (o == null || getClass() != o.getClass()) return false;
         Employee employee = (Employee) o;
         if (id != employee.id) return false;
-        if (name != null ? !name.equals(employee.name) : employee.name != null) return false;
+        if (!Objects.equals(name, employee.name)) return false;
         if (!Objects.equals(dateOfBirth, employee.dateOfBirth)) return false;
         return Objects.equals(salary, employee.salary);
     }

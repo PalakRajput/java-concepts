@@ -43,7 +43,7 @@ public class CompletableFutureDemo {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         //allOf
-//        usageOfAllOf();
+        usageOfAllOf();
 //        //anyOf
 //        usageOfAnyOf();
 //        usageOfThenCompose();
@@ -51,8 +51,8 @@ public class CompletableFutureDemo {
 //        usageOfThenAccept();
 //        usageOfThenRun();
         //for errors
-        usageOfExceptionally();
-        usageOfHandle();
+//        usageOfExceptionally();
+//        usageOfHandle();
 
     }
 
@@ -107,6 +107,7 @@ public class CompletableFutureDemo {
         System.out.println("Hello from Main::" + Thread.currentThread().getName());
         sleep(6);
         //This is to get the result of
+//        allFuture.thenAccept(t -> System.out.println(t));
         CompletableFuture<List<String>> allFutureResults = allFuture
                 .thenApply(t -> completableFutures.stream().map(CompletableFuture::join)
                         .collect(Collectors.toList()));
