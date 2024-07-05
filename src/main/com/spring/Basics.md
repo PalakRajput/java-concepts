@@ -1,10 +1,46 @@
 # Spring framework
 
+## IoC Containers:
+
+1. BeanFactory
+2. ApplicationContext
+
+### Bean Factory
+
+- Supports bean creation using xml file.
+- Loads beans on demand (lazy loading by default).
+- Supports only singleton and prototype bean scope.
+- Does not register BeanFactoryPostProcessor and BeanPostProcessors automatically.
+- If we are using bean factory then features like transaction and AOP will not take effect by default.
+
+```java
+public class TempClass {
+    public static void main(String[] args) {
+        // Create an XML configuration file.
+        String xmlPath = "beans.xml";
+
+        // Create a ClassPathXmlApplicationContext object and pass the XML configuration file to the constructor.
+        ClassPathXmlApplicationContext ctx = new ClassPathXmlApplicationContext(xmlPath);
+
+        // Get a reference to the "hello" bean by its name.
+        Hello hello = (Hello) ctx.getBean("hello");
+
+        // Call the print() method on the bean.
+        hello.print();
+    }
+}
+```
+
 ### Application Context
 
-Application context is the heart of the application. It encapsulates bean factory(which provides IoC container) and
-allows user to
-access beans. IoC container is responsible for creation/injection of all beans at startup.
+- Supports bean creation using xml file or java configuration.
+- Beans are loaded at the time of ioc container startup.
+- Supports all bean scopes(Singleton, prototype, request, session, application, ...).
+- Register BeanFactoryPostProcessor and BeanPostProcessors automatically.
+- More flexible than BeanFactory.
+- Supports internationalization(i18n)
+  Application context is the heart of the application. It encapsulates bean factory(which provides IoC container) and
+  allows user to access beans. IoC container is responsible for creation/injection of all beans at startup.
 
 ### Spring MVC Components:
 
@@ -89,3 +125,16 @@ public class MyCustomFilter implements Filter {
     }
 }
 ```
+
+### Dynamic proxies
+
+Achieved by JDK Reflection API, it is used when the target class which will be proxied by any feature that relies on
+proxy implements at least one interface. It is always preferred.
+Thr proxy class will implement the same interface as the target class.
+
+### CGLib(Code Generation Library) - Not active project any more instead Javassit is used now since spring 3.2
+
+This is a third party library, used when our target class doesn't implement any interfaces.
+The proxy is created through inheritance. A new class is created which inherits from the target class.
+
+AOP, Transaction management, caching, spring security, scopes of bean etc are managed through proxies in spring.

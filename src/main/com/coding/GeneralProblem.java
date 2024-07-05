@@ -154,11 +154,100 @@ public class GeneralProblem {
 //        System.out.println(topKFrequent(new int[]{1,1,1,2,2,3}, 2));
 
 //        System.out.println(maximumGain("aabbaaxybbaabb", 5, 4));
-        System.out.println(findMinimumMissingElement(new int[]{1, 2, 3, 5, 6, 7, 8, 9}));
+//        System.out.println(findMinimumMissingElement(new int[]{1, 2, 3, 5, 6, 7, 8, 9}));
+//        System.out.println(Arrays.toString(longestUniformSubstring("10000111")));
+        System.out.println(lengthOfCycle(new int[]{2, 3, 0}, 0));
+        List<String> parentList = Arrays.asList("Name1", "Name2", "Name3", "Name4", "Name5", "Name6");
 
+//        for (String name : parentList) {
+//            parentList.remove(2);
+//        }
+        System.out.println(bestAverageGrade(new String[][]{{"Sarah", "91"},
+                {"Goldie", "92"},
+                {"Elaine", "93"},
+                {"Elaine", "95"},
+                {"Goldie", "94"},
+                {"Sarah", "93"}}));
     }
 
-    public static int findMinimumMissingElement(int[] arr){
+    private static int bestAverageGrade(String[][] arr) {
+        int bestAverage;
+
+        Map<String, Double> map = Arrays.stream(arr).
+                collect(Collectors.groupingBy(s -> s[0],
+                        Collectors.averagingInt(s -> Integer.parseInt(s[1]))));
+
+        Map.Entry<String, Double> entry = map.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).findFirst()
+                .get();
+
+        bestAverage = (int) Math.floor(entry.getValue());
+
+        return bestAverage;
+    }
+
+    /**
+     * Test Cases:
+     * Input : arr: [1,0]
+     * startIndex: 0
+     * Output :2
+     * Input : arr: [1,2,0]
+     * startIndex: 0
+     * Output :2
+     *
+     * @param arr
+     * @param start
+     * @return
+     */
+
+    private static int lengthOfCycle(int[] arr, int start) {
+        int length = -1;
+
+        List<Integer> seen = new ArrayList<>();
+        seen.add(start);
+        while(start < arr.length && start >= 0){
+            start = arr[start];
+            if(seen.contains(start)){
+                return seen.size() - seen.indexOf(start);
+            } else {
+                seen.add(start);
+            }
+            if(seen.size() == arr.length + 1){
+                return -1;
+            }
+        }
+
+        return length;
+    }
+
+    public static int[] longestUniformSubstring(String input) {
+        int[] res = new int[2];
+        if (input == null || input.isEmpty()) {
+            return res;
+        }
+        char prev = input.charAt(0);
+        int count = 1;
+        int maxCount = Integer.MIN_VALUE;
+        int maxCountIdx = 0;
+        int idx = 0;
+        for (int i = 1; i < input.length(); i++) {
+            if (prev == input.charAt(i)) {
+                count++;
+            } else {
+                if (count > maxCount) {
+                    maxCount = count;
+                    maxCountIdx = idx;
+                }
+                idx = i;
+                count = 1;
+                prev = input.charAt(i);
+            }
+        }
+        res[0] = maxCountIdx;
+        res[1] = maxCount;
+        return res;
+    }
+
+    public static int findMinimumMissingElement(int[] arr) {
 
         int element = -1;
 
@@ -166,9 +255,9 @@ public class GeneralProblem {
         int high = arr.length - 1;
         // [1, 2, 3, 5, 6, 7, 8, 9]
         // [0, 1, 2, 3, 4, 5, 6, 7]
-        while(low <= high){
-            int mid = (high + low )/2;
-            if(arr[mid] == mid + 1){
+        while (low <= high) {
+            int mid = (high + low) / 2;
+            if (arr[mid] == mid + 1) {
                 //search in right side
                 high = mid + 1;
             } else {
@@ -216,9 +305,9 @@ public class GeneralProblem {
                         Map.Entry::getValue,
                         (oldValue, newVal) -> oldValue, LinkedHashMap::new));
 
-        for(Map.Entry<Integer, Integer> e : res.entrySet()){
+        for (Map.Entry<Integer, Integer> e : res.entrySet()) {
             result[j++] = e.getKey();
-            if(j == k){
+            if (j == k) {
                 break;
             }
         }
@@ -254,12 +343,13 @@ public class GeneralProblem {
         }
         return true;
     }
+
     public static Node getIntersectionNode(Node headA, Node headB) {
         Node temp1 = headA;
         Node temp2 = headB;
         while (temp1 != null) {
-            while (temp2 != null){
-                if(temp1 == temp2){
+            while (temp2 != null) {
+                if (temp1 == temp2) {
                     return temp1;
                 }
                 temp2 = temp2.next;
