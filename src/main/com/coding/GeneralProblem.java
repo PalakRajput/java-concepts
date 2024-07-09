@@ -1,7 +1,8 @@
 package src.main.com.coding;
 
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 
@@ -168,6 +169,59 @@ public class GeneralProblem {
                 {"Elaine", "95"},
                 {"Goldie", "94"},
                 {"Sarah", "93"}}));
+//        1,3,2,2,3,2,2,2,7
+        Node head = new Node(1, null);
+        head.next = new Node(3, null);
+        head.next.next = new Node(2, null);
+        head.next.next.next = new Node(2, null);
+        head.next.next.next.next = new Node(3, null);
+        head.next.next.next.next.next = new Node(2, null);
+        head.next.next.next.next.next.next = new Node(2, null);
+        head.next.next.next.next.next.next.next = new Node(2, null);
+        head.next.next.next.next.next.next.next.next = new Node(7, null);
+        System.out.println(Arrays.toString(nodesBetweenCriticalPoints(head)));
+    }
+
+
+    public static int[] nodesBetweenCriticalPoints(Node head) {
+        if (head.next == null) {
+            return new int[]{-1, -1};
+        }
+        int[] result = new int[2];
+        Node prev = null;
+        Node curr = head;
+        int nodeCount = 1;
+        Node next = curr.next;
+        int min = Integer.MAX_VALUE;
+        int max = Integer.MIN_VALUE;
+        int prevCP = 0;
+        int currCP = 0;
+        while (next != null) {
+            if (prev != null) {
+                if (prevCP != currCP && prevCP > 0 && currCP > 0) {
+                    min = Math.min(Math.abs(prevCP - currCP), min);
+                    max = Math.max(Math.abs(prevCP - currCP), max);
+                }
+                if (prev.data > curr.data && curr.data < next.data) {
+                    prevCP = currCP;
+                    currCP = nodeCount;
+                } else if (prev.data < curr.data && curr.data > next.data) {
+                    prevCP = currCP;
+                    currCP = nodeCount;
+                }
+            }
+            prev = curr;
+            curr = next;
+            next = next.next;
+            nodeCount++;
+        }
+        if (prevCP != currCP && prevCP > 0 && currCP > 0) {
+            min = Math.min(Math.abs(prevCP - currCP), min);
+            max = Math.max(Math.abs(prevCP - currCP), max);
+        }
+        result[0] = min == Integer.MAX_VALUE ? -1 : min;
+        result[1] = max == Integer.MIN_VALUE ? -1 : max;
+        return result;
     }
 
     private static int bestAverageGrade(String[][] arr) {
@@ -204,14 +258,14 @@ public class GeneralProblem {
 
         List<Integer> seen = new ArrayList<>();
         seen.add(start);
-        while(start < arr.length && start >= 0){
+        while (start < arr.length && start >= 0) {
             start = arr[start];
-            if(seen.contains(start)){
+            if (seen.contains(start)) {
                 return seen.size() - seen.indexOf(start);
             } else {
                 seen.add(start);
             }
-            if(seen.size() == arr.length + 1){
+            if (seen.size() == arr.length + 1) {
                 return -1;
             }
         }

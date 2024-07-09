@@ -56,6 +56,7 @@ class Employee {
 
         //Build the Employee object
         public Employee build() {
+
             return new Employee(this);
         }
     }
