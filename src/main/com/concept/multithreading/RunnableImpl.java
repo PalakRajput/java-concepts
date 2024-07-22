@@ -45,7 +45,7 @@ public class RunnableImpl implements Runnable {
         service1.execute(runnable);
 
         //Returns list of waiting task and tries to shut down.
-//        service1.shutdownNow();
+        service.shutdownNow();
 
 
     }

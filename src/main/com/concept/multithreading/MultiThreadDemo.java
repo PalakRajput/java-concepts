@@ -4,9 +4,13 @@ public class MultiThreadDemo implements Runnable {
 
     //Runnable runnable = () -> System.out.println("Hello world");
 
-    public static void main(String[] args) {
-        new Thread(new MultiThreadDemo()).start();
-
+    public static void main(String[] args) throws InterruptedException {
+        Thread t = new Thread(new MultiThreadDemo());
+        t.start();
+        t.join();
+        for (int i = 6; i <=10; i++){
+            System.out.print(i + " ");
+        }
     }
 
     /**
@@ -22,6 +26,8 @@ public class MultiThreadDemo implements Runnable {
      */
     @Override
     public void run() {
-        System.out.println("Hello world");
+        for (int i = 1; i <=5; i++){
+            System.out.print(i + " ");
+        }
     }
 }

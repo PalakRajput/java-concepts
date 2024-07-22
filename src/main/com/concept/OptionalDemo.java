@@ -6,6 +6,52 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+interface TestA {
+    void abstractPrint(String name);
+
+    static void staticPrint() {
+        System.out.println("Print from static method of TestA");
+    }
+
+    default void defaultPrint() {
+        System.out.println("Print from default method of TestA");
+    }
+}
+
+interface TestB {
+    void abstractPrint(String name);
+
+    static void staticPrint() {
+        System.out.println("Print from static method of TestB");
+    }
+
+    default void defaultPrint() {
+        System.out.println("Print from default method of TestB");
+    }
+}
+
+class TestAB implements TestA, TestB {
+
+
+    @Override
+    public void abstractPrint(String name) {
+        System.out.println("Abstract method in implementation class");
+    }
+
+    @Override
+    public void defaultPrint() {
+        TestA.super.defaultPrint();
+    }
+
+    public static void staticPrint() {
+        System.out.println("Print from static method in implementation class");
+    }
+
+    public static void main(String[] args) {
+
+    }
+}
+
 public class OptionalDemo {
     public static void main(String[] args) {
         Optional<String> o = Optional.empty();

@@ -24,7 +24,6 @@ public class CallableImpl implements Callable<Integer> {
         //service.execute(Runnable); return type is void
 //        service.invokeAny()
         Future<Integer> future = service.submit(new CallableImpl());
-
         try {
             int sum  = future.get();
             System.out.println(sum);
