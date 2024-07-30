@@ -42,7 +42,7 @@ public class EvenOddDemo {
     public static void main(String[] args) {
         N = 10;
         EvenOddDemo myClass = new EvenOddDemo();
-        Thread t1 = new Thread(myClass::printEvenNumber);
+        Thread t1 = new Thread(() -> myClass.printEvenNumber());
         Thread t2 = new Thread(myClass::printOddNumber);
         t1.start();
         t2.start();

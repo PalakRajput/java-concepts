@@ -1,5 +1,6 @@
 package src.main.com.coding;
 
+import java.math.BigInteger;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -122,7 +123,8 @@ public class GeneralProblem {
 //        listDemo();
 //        findJourney();
 //        System.out.println(evalRPN(new String[]{"10", "6", "9", "3", "+", "-11", "*", "/", "*", "17", "+", "5", "+"}));
-//        System.out.println(decodeString("2[abc]3[cd]ef"));
+        System.out.println(decodeString("2[abc]3[cd]ef"));
+        System.out.println(decodeString("a3[b2[cd]]"));
 //        System.out.println(minAddToMakeValid("()))(("));
 //        System.out.println(buddyStrings("ab", "ba"));
 //        System.out.println(Arrays.toString(canSeePersonsCount(new int[]{10, 6, 8, 5, 11, 9})));
@@ -180,6 +182,114 @@ public class GeneralProblem {
         head.next.next.next.next.next.next.next = new Node(2, null);
         head.next.next.next.next.next.next.next.next = new Node(7, null);
         System.out.println(Arrays.toString(nodesBetweenCriticalPoints(head)));
+
+        System.out.println(distanceBetweenTwoWords("the quick the brown quick brown the frog", "quick", "frog"));
+
+        System.out.println("Decode string2: " + decodeString2("ab[2]c[3]de"));
+        System.out.println("Pivot element: " + findPivotElement(new int[]{1, 2, 3, 4, 5}));
+        System.out.println(Arrays.deepToString(mergePairs(new int[][]{{1, 4}, {2, 5}, {7, 9}, {6, 10}})));
+        StringBuilder sn = new StringBuilder();
+        sn.append("->");
+    }
+
+    private static int[][] mergePairs(int[][] arr) {
+        List<int[]> list = new ArrayList<>();
+        Arrays.sort(arr, Comparator.comparingInt(arr2 -> arr2[0]));
+        int[] prev = arr[0];
+        int i = 0;
+        while (i < arr.length) {
+            //if current intervals starttime is less than or equal to previous intervals end time then the intervals are over lapping.
+            if (arr[i][0] <= prev[1]) {
+                prev[1] = Math.max(prev[1], arr[i][1]);
+                i++;
+            } else {
+                list.add(prev);
+                prev = arr[i];
+            }
+        }
+        list.add(prev);
+        int[][] res = new int[list.size()][2];
+        int j = 0;
+        for (int[] a : list) {
+            res[j++] = a;
+        }
+
+        return res;
+    }
+
+    /**
+     * Problem 1: given an integer array that satisfies the following conditions
+     * <p>
+     * Each array may or may not contain a pivot element.
+     * An element is a pivot element if all the numbers after it are sorted in descending order and if all the numbers before it are sorted in ascending order.
+     * An element is a pivot element if all the numbers after it are sorted in ascending order and if all the numbers before it are sorted in descending order.
+     * The problem is to find the pivot element or else return -1 if array does not contain a pivot element.
+     * <p>
+     * array = [1,2,3,4,5] ans= -1,  array =[5,4,3,2,1] ans = -1,  array = [5,4,1,2,3] ans=1,  array = [1,2,5,4,3] ans=5
+     *
+     * @param arr
+     * @return
+     */
+    private static int findPivotElement(int[] arr) {
+        int pivot = -1;
+        //pivot element can't be first or last element as there will not be any elements before or after them respectively
+        int i = 1;
+        while (i < arr.length - 1) {
+            if (checkAscending(0, i - 1, arr) && checkDescending(i + 1, arr.length - 1, arr)) {
+                pivot = arr[i];
+                break;
+            } else if (checkAscending(i + 1, arr.length - 1, arr) && checkDescending(0, i - 1, arr)) {
+                pivot = arr[i];
+                break;
+            }
+            i++;
+        }
+
+        return pivot;
+    }
+
+    private static boolean checkAscending(int start, int end, int[] arr) {
+        boolean sorted = true;
+        for (int j = start + 1; j <= end; j++) {
+            if (arr[j - 1] > arr[j]) {
+                return false;
+            }
+        }
+        return sorted;
+    }
+
+    private static boolean checkDescending(int start, int end, int[] arr) {
+        boolean sorted = true;
+        for (int j = start + 1; j <= end; j++) {
+            if (arr[j - 1] < arr[j]) {
+                return false;
+            }
+        }
+        return sorted;
+    }
+
+
+    private static int distanceBetweenTwoWords(String sentence, String word1, String word2) {
+        int idx1 = -1;
+        int idx2 = -1;
+        int minDistance = Integer.MAX_VALUE;
+        String[] arr = sentence.split(" ");
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i].equals(word1)) {
+                idx1 = i;
+                if (idx2 != -1) {
+                    minDistance = Math.min(minDistance, idx2 - idx1 - 1);
+                }
+
+            } else if (arr[i].equals(word2)) {
+                idx2 = i;
+                if (idx1 != -1) {
+                    minDistance = Math.min(minDistance, idx2 - idx1 - 1);
+                }
+
+            }
+        }
+        return minDistance;
     }
 
 
@@ -234,6 +344,7 @@ public class GeneralProblem {
         Map.Entry<String, Double> entry = map.entrySet().stream().sorted(Map.Entry.comparingByValue(Comparator.reverseOrder())).findFirst()
                 .get();
 
+
         bestAverage = (int) Math.floor(entry.getValue());
 
         return bestAverage;
@@ -271,6 +382,73 @@ public class GeneralProblem {
         }
 
         return length;
+    }
+
+    private static int lengthOfCycleFloydCycleDetectionAlgorithm(int[] arr, int start) {
+        int length = -1;
+
+        int slow = start;
+        int fast = start;
+        while (true) {
+            slow = arr[slow];
+            if (fast < arr.length && arr[fast] < arr.length) {
+                fast = arr[arr[fast]];
+            } else {
+                return -1;
+            }
+            if (slow == fast) {
+                return getLength(arr, start);
+            }
+        }
+    }
+
+    private static int getLength(int[] arr, int start) {
+        int length = 1;
+        int current = arr[start];
+        while (current != start) {
+            current = arr[current];
+            length++;
+        }
+        return length;
+    }
+
+    public static int myAtoi(String s) {
+        s = s.trim();
+        int num = 0;
+        StringBuilder sb = new StringBuilder();
+        boolean isNegative = false;
+        int i = 0;
+        while (i < s.length()) {
+            if (s.charAt(i) == 0 && sb.isEmpty()) {
+                i++;
+            } else if (s.charAt(i) == '-' && sb.isEmpty() && i == 0) {
+                isNegative = true;
+                i++;
+            } else if (Character.isDigit(s.charAt(i))) {
+                sb.append(s.charAt(i));
+                i++;
+            } else {
+                break;
+            }
+        }
+        if (sb.isEmpty()) {
+            sb.append("0");
+        }
+
+        BigInteger y = new BigInteger(sb.toString());
+
+        y = isNegative ? y.multiply(BigInteger.valueOf(-1)) : y;
+        if (y.compareTo(BigInteger.valueOf(Integer.MAX_VALUE)) > 0) {
+            return Integer.MAX_VALUE;
+        } else if (y.compareTo(BigInteger.valueOf(Integer.MIN_VALUE)) > 0) {
+            return Integer.MIN_VALUE;
+        } else {
+            return y.intValue();
+        }
+//        return (int) y;
+
+
+//        return isNegative ? Integer.parseInt("-" + sb) : Integer.parseInt(sb.toString());
     }
 
     public static int[] longestUniformSubstring(String input) {
@@ -710,6 +888,35 @@ public class GeneralProblem {
         return count;
     }
 
+    //decode string (input string has number in square brackets and we have to decode it by
+    // transforming number into characters before square bracket)
+    //example -  Input = ab[2]c[3]de, output = abbcccde
+    public static String decodeString2(String s) {
+        Stack<String> stack = new Stack<>();
+        int times = 0;
+        for (String s1 : s.split("")) {
+            if (s1.matches("]")) {
+                while (!stack.isEmpty() && !stack.peek().equals("[")) {
+                    times = times * 10 + Integer.parseInt(stack.pop());
+                }
+                stack.pop(); //for popping "["
+                String valToRepeat = stack.pop();
+                stack.push(valToRepeat.repeat(times));
+                times = 0;
+            } else {
+                stack.push(s1);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        for (String s1 : stack) {
+            sb.append(s1);
+        }
+
+        return sb.toString();
+    }
+
+    //"2[abc]3[cd]ef"
+    //"a3[b2[cd]]"
     public static String decodeString(String s) {
         Stack<String> stack = new Stack<>();
         for (String s1 : s.split("")) {
@@ -718,11 +925,11 @@ public class GeneralProblem {
             } else {
                 if (Objects.equals(s1, "]")) {
                     List<String> list = new ArrayList<>();
-                    list.add(1, "a");
                     while (!stack.isEmpty() && !Objects.equals(stack.peek(), "[")) {
                         list.add(stack.pop());
                     }
                     StringBuilder sb = new StringBuilder();
+                    //after popping from stack the elements are reversed so append from end of list to get the correct order
                     for (int j = list.size() - 1; j >= 0; j--) {
                         sb.append(list.get(j));
                     }
@@ -737,6 +944,7 @@ public class GeneralProblem {
                         for (int j = list1.size() - 1; j >= 0; j--) {
                             sb1.append(list1.get(j));
                         }
+                        //to get the integer value
                         int times = Integer.parseInt(sb1.toString());
 
                         stack.push(sb.toString().repeat(times));
@@ -860,6 +1068,21 @@ public class GeneralProblem {
         }
         for (int anInt : ints) {
             System.out.print(anInt + " ");
+        }
+        Map<Integer, Long> map = Arrays.stream(ints).boxed().
+                collect(Collectors.groupingBy(i -> i, Collectors.counting()))
+                .entrySet().stream()
+                .sorted(Map.Entry.<Integer, Long>comparingByValue()
+                        .thenComparing(Map.Entry::getKey, Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
+                        (oldVal, newVal) -> oldVal, LinkedHashMap::new));
+        int i = 0;
+        for (Map.Entry<Integer, Long> e : map.entrySet()) {
+            Long val = e.getValue();
+            while (val > 0) {
+                ints[i++] = e.getKey();
+                val--;
+            }
         }
     }
 }

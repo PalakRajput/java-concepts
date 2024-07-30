@@ -3,11 +3,7 @@ package src.main.com.concept.multithreading;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Random;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 class ProducerConsumerExample {
 
@@ -121,7 +117,7 @@ public class ProducerConsumerImpl {
 
     public static void main(String[] args) {
         ProducerConsumerImpl impl = new ProducerConsumerImpl();
-        Thread t1 = new Thread(impl::produce);
+        Thread t1 = new Thread(() -> impl.produce());
         Thread t2 = new Thread(impl::consumer);
         t1.start();
         t2.start();
