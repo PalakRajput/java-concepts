@@ -16,7 +16,7 @@ class Country {
         return new ArrayList<>(cities);
     }
 
-    public void func(){
+    public void func() {
         try {
             try {
                 if (true) {
@@ -55,7 +55,7 @@ class Country {
 //            return 3;
 //        }
 //        return 4; //compile error, statement not reachable
-    }
+}
 
 
 public class Main {
@@ -99,6 +99,41 @@ public class Main {
         String s = "weqweqeweq142342fdfgd43rgeuopiporwe";
         s.contains(String.valueOf('d'));
 
+        Node rotatedList = rotateList(4);
+        Set<Integer> set = new LinkedHashSet<>();
+//        set.
+
+    }
+
+    private static Node rotateList(int i) {
+        Node head = getLL();
+        Node temp = head;
+        if (head == null || i == 0) {
+            return head;
+        }
+        int count = 1;
+        while (count != i && temp != null){
+            temp = temp.next;
+            count++;
+        }
+        //at this point count = i and temp is pointing to k+1 node which has to be head.
+        Node temp1 = temp;
+        Node temp2 = head;
+        while(temp1 != null){
+//            temp2 =
+        }
+        return null;
+
+    }
+
+    private static Node getLL() {
+        Node last = new Node(60, null);
+        Node sLast = new Node(50, last);
+        Node tLast = new Node(40, sLast);
+        Node fLast = new Node(30, tLast);
+        Node fiLast = new Node(20, fLast);
+        Node head = new Node(10, fiLast);
+        return head;
     }
 
     private static int calculate() {
@@ -129,8 +164,8 @@ public class Main {
 }
 
 class Node {
-     int data;
-     Node next;
+    int data;
+    Node next;
 
     Node(int data, Node next) {
         this.data = data;
