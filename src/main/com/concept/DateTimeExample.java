@@ -56,9 +56,9 @@ public class DateTimeExample {
         LocalDate ld6 = year.atMonth(6).atDay(4);
 
         //Zoned date time
-//        for(String zoneId: ZoneId.getAvailableZoneIds()){
-//            System.out.println(zoneId);
-//        }
+        for(String zoneId: ZoneId.getAvailableZoneIds()){
+            System.out.println(zoneId);
+        }
 
         ZoneId zoneId = ZoneId.of("Asia/Kolkata");
         System.out.println(zoneId.getDisplayName(TextStyle.FULL, Locale.US));

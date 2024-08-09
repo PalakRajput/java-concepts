@@ -194,7 +194,7 @@ public class GeneralProblem {
 
     private static int[][] mergePairs(int[][] arr) {
         List<int[]> list = new ArrayList<>();
-        Arrays.sort(arr, Comparator.comparingInt(arr2 -> arr2[0]));
+        Arrays.sort(arr, (a1, a2) -> a1[0] - a2[0]);
         int[] prev = arr[0];
         int i = 0;
         while (i < arr.length) {

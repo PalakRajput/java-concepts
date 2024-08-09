@@ -15,9 +15,9 @@ public class EvenOddDemo {
                         e.printStackTrace();
                     }
                 }
-                System.out.print(count + " ");
+                System.out.println(count + " from " + Thread.currentThread().getName());
                 count++;
-                notify();
+                notifyAll();
             }
         }
     }
@@ -32,19 +32,28 @@ public class EvenOddDemo {
                         e.printStackTrace();
                     }
                 }
-                System.out.print(count + " "); //If number is even print it
+                System.out.println(count + " from " + Thread.currentThread().getName()); //If number is even print it
                 count++; //increment the count
-                notify(); //notify other thread
+                notifyAll(); //notify other thread
             }
         }
     }
 
     public static void main(String[] args) {
-        N = 10;
+        N = 100;
         EvenOddDemo myClass = new EvenOddDemo();
         Thread t1 = new Thread(() -> myClass.printEvenNumber());
         Thread t2 = new Thread(myClass::printOddNumber);
+        Thread t3 = new Thread(() -> myClass.printEvenNumber());
+        Thread t4 = new Thread(myClass::printOddNumber);
+        t1.setName("t1");
+        t2.setName("t2");
+        t3.setName("t3");
+        t4.setName("t4");
         t1.start();
+        t3.start();
+        t4.start();
         t2.start();
+
     }
 }

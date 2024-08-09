@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -43,7 +42,7 @@ public class CompletableFutureDemo {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         //allOf
-        usageOfAllOf();
+//        usageOfAllOf();
 //        //anyOf
 //        usageOfAnyOf();
 //        usageOfThenCompose();
@@ -53,6 +52,25 @@ public class CompletableFutureDemo {
         //for errors
 //        usageOfExceptionally();
 //        usageOfHandle();
+        CompletableFuture<Integer> result = CompletableFuture.supplyAsync(() -> 10)
+                .thenApplyAsync(x -> x * 2)
+                .thenApplyAsync(x -> x - 10);
+
+        result.thenAccept(System.out::println);
+        CompletableFuture<String> whatsYourNameFuture = CompletableFuture.supplyAsync(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException e) {
+                throw new IllegalStateException(e);
+            }
+            return "Jane";
+        });
+
+        // Attach a callback to the Future using thenApply()
+        CompletableFuture<String> greetingFuture = whatsYourNameFuture.thenApply(name -> "Hello from then apply " + name);
+        whatsYourNameFuture.thenAccept(name -> System.out.println("Hello from then accept " + name));
+        // Block and get the result of the future.
+        System.out.println(greetingFuture.join());
 
     }
 
@@ -103,7 +121,7 @@ public class CompletableFutureDemo {
         long startTime = System.currentTimeMillis();
         List<CompletableFuture<String>> completableFutures = Arrays.asList(futureOne(), futureTwo(), futureThree());
         //allOf returns CompletableFuture<Void>
-        CompletableFuture<Void> allFuture = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0]));
+        CompletableFuture<Void> allFuture = CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[3]));
         System.out.println("Hello from Main::" + Thread.currentThread().getName());
         sleep(6);
         //This is to get the result of
@@ -111,7 +129,6 @@ public class CompletableFutureDemo {
         CompletableFuture<List<String>> allFutureResults = allFuture
                 .thenApply(t -> completableFutures.stream().map(CompletableFuture::join)
                         .collect(Collectors.toList()));
-        List<String> result = allFutureResults.join();
         System.out.println("Result from allOf allFutureResult.join: " + allFutureResults.join());
         long endTime = System.currentTimeMillis();
         System.out.println("Time taken by allOf::" + (endTime - startTime) / 1000);

@@ -2,7 +2,6 @@ package src.main.com.concept;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -73,7 +72,7 @@ public class OptionalDemo {
         String middleName = optionalPerson
                 .filter(person -> person.getGender() == Gender.FEMALE)
                 .map(Person::getMiddleName)
-                .filter(Objects::nonNull)
+                .filter(mName -> mName != null)
                 .map(String::toUpperCase)
                 .orElseGet(() -> "Middle name not found");
 

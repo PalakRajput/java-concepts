@@ -108,7 +108,7 @@ interface X {
     int test(int i);
 }
 class Question_9_8 {
-    int i = 0;
+     int i = 0;
     public static void main(String[] args) {
         X x = i -> i * 2; //lambda can refer to sta
         System.out.println(x.test(3));

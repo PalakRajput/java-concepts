@@ -21,7 +21,7 @@ public class CallableImpl implements Callable<Integer> {
     public static void main(String[] args) {
         ExecutorService service = Executors.newFixedThreadPool(2);
 
-        //service.execute(Runnable); return type is void
+        service.execute(() -> System.out.println("Runnable instance")); //return type is void
 //        service.invokeAny()
         Future<Integer> future = service.submit(new CallableImpl());
         try {
