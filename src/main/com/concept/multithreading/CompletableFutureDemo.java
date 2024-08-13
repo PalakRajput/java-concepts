@@ -74,6 +74,8 @@ public class CompletableFutureDemo {
 
     }
 
+    //use .handle and .exceptionally when we want partial result in event of failure and if everything should fail then
+    // we should not handle the exception as the allOf will throw CompletionException in event of any exception
     private static void usageOfHandle() throws ExecutionException, InterruptedException {
         Integer age = -1;
 
