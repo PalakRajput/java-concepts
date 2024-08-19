@@ -1,7 +1,6 @@
 package src.main.com.coding;
 
-import java.util.Arrays;
-import java.util.Random;
+import java.util.*;
 
 public class ArrayQues {
     public static void main(String[] args) {
@@ -9,6 +8,61 @@ public class ArrayQues {
         System.out.println(Arrays.toString(arr));
         int[] randomizedArr = getRandomizedArray(new int[]{1, 2, 3, 4});
         System.out.println(Arrays.toString(randomizedArr));
+        String[] strings1 = new String[]{"a/*/b//*c", "blank", "d//*e/*/f"};
+        String[] strings = new String[]{"/*Test program */", "int main()", "{ ", "  // variable declaration ", "int a, b, c;", "/* This is a test", "   multiline  ", "   comment for ", "   testing */", "a = b + c;", "}"};
+        System.out.println(removeComments(strings1));
+        char[] chars = new char[]{'a', 'b', 'c'};
+        System.out.println(compress(chars));
+        System.out.println("Num pairs divisible by 60 are: " + numPairsDivisibleBy60(new int[]{15,63,451,213,37,209,343,319}));
+    }
+
+
+    //Ques 1010 on LC
+    public static int numPairsDivisibleBy60(int[] time) {
+        int count = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int t : time) {
+            if (map.containsKey((60 - t % 60))) {
+                int val = map.get((60 - t % 60));
+                int pVal = val;
+                if((60 - t % 60) == t){
+                    val++;
+                    map.put(t, val);
+                    count = count > 0 ? count - pVal : count;
+                }
+                count += val;
+            } else {
+                map.put(t, 1);
+            }
+
+        }
+        return count;
+    }
+
+    public static int compress(char[] chars) {
+        int j = 0;
+        if (chars.length == 1) {
+            return 1;
+        }
+        for(int i = 0; i < chars.length; ){
+            char curr = chars[i];
+            int count = 0;
+            while(i < chars.length && curr == chars[i]){
+                count++;
+                i++;
+            }
+            chars[j++] = curr;
+            if(count > 1){
+                StringBuilder sb = new StringBuilder();
+                sb.append(count);
+                for(char ch: sb.toString().toCharArray()){
+                    chars[j++] = ch;
+                }
+            }
+
+        }
+        System.out.println(Arrays.toString(chars));
+        return j;
     }
 
     private static int[] getRandomizedArray(int[] arr) {
@@ -73,5 +127,47 @@ public class ArrayQues {
             arr1[i++] = arr2[j++];
         }
         return arr1;
+    }
+
+    //https://leetcode.com/problems/remove-comments/
+    //this is not yet correct
+    public static List<String> removeComments(String[] source) {
+        List<String> result = new ArrayList<>();
+        boolean isBlockOpen = false;
+        StringBuilder sb = new StringBuilder();
+        for (String line : source) {
+            if (line.contains("//") && !isBlockOpen && line.indexOf("/*") > line.indexOf("//")) {
+                String val = line.substring(0, line.indexOf("//"));
+                if (!val.isEmpty()) {
+                    result.add(val);
+                }
+            } else {
+                if (line.contains("/*") && !isBlockOpen) {
+                    String val = line.substring(0, line.indexOf("/*"));
+                    sb.append(val);
+                    isBlockOpen = true;
+                    if (line.contains("*/") && line.indexOf("*/") + 1 != line.lastIndexOf("*/")) {
+                        String str = line.substring(line.lastIndexOf("*/") + 2);
+                        sb.append(str);
+                        isBlockOpen = false;
+                        if (!sb.isEmpty()) {
+                            result.add(sb.toString());
+                        }
+                        sb = new StringBuilder();
+                    }
+                } else if (line.contains("*/") && isBlockOpen) {
+                    String str = line.substring(line.lastIndexOf("*/") + 2);
+                    sb.append(str);
+                    isBlockOpen = false;
+                    if (!sb.isEmpty()) {
+                        result.add(sb.toString());
+                    }
+                    sb = new StringBuilder();
+                } else if (!isBlockOpen) {
+                    result.add(line);
+                }
+            }
+        }
+        return result;
     }
 }
